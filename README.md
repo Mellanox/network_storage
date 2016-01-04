@@ -9,7 +9,7 @@ For each template, the user will be able to change the arguments on run-time. Fi
 ### Installation
 
 Windows:
-* Download the prject as zip.
+* Download the project as zip.
 * Click on the "oneclick.bat" file.
-* If you are required to install python, click on the “python-2.6.6.amd64” file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
+* If you are required to install python, click on the “python-2.7.10.amd64” file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
 

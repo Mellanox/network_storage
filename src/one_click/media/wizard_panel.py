@@ -31,7 +31,7 @@ class WizardPanel(wx.Panel):
         """Constructor"""
         wx.Panel.__init__(self, parent=parent)
 
-        self.execution_mgr = ActionMngr()
+        self.execution_mgr = ActionMngr(r"data")
 
         self.pages = []
         self.page_num = 0

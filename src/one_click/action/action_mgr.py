@@ -26,9 +26,7 @@ class ActionMngr(object):
     """
     """
 
-    DATA_FOLDER_PATH = r"data"
-
-    def __init__(self):
+    def __init__(self, data_path):
         """
         Constructor
         """
@@ -40,6 +38,8 @@ class ActionMngr(object):
         self.main_data = None
 
         self.current_template_index = -1
+
+        self.data_path = data_path
 
     def add_template(self, template_name):
         self.template_list.append(template_name)
@@ -62,10 +62,9 @@ class ActionMngr(object):
             "object_ids": switch_ips.split(','),
             "object_type": "System"
         }
-        file_path = r"%s\%s" % (self.DATA_FOLDER_PATH, str(uuid.uuid4()))
+        file_path = r"%s\%s" % (self.data_path, str(uuid.uuid4()))
         with open(file_path, "w+") as payload_file:
             json.dump(payload, payload_file, indent=4)
-
         return file_path
 
     def _construct_cmd(self, template_name, payload_file_path,
@@ -119,8 +118,8 @@ class ActionMngr(object):
         return self.template_list[self.current_template_index + 1]
 
     def clean(self):
-        for file_name in os.listdir(self.DATA_FOLDER_PATH):
-            file_path = os.path.join(self.DATA_FOLDER_PATH, file_name)
+        for file_name in os.listdir(self.data_path):
+            file_path = os.path.join(self.data_path, file_name)
             try:
                 os.unlink(file_path)
             except Exception, e:

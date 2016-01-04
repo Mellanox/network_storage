@@ -18,6 +18,7 @@ import wx
 import sys
 import re
 from time import clock
+from one_click.common.utils import Utils
 
 
 class WizardExecutionPage(wx.Panel):
@@ -25,9 +26,6 @@ class WizardExecutionPage(wx.Panel):
 
     MAX_GAUGE_VALUE = 100
     GAUGE_INIT_VALUE = 2
-    PROVISIONING_SUMMARY_REGEX = r'"Summary": "(.*)"'
-    PROVISIONING_STATUS_CODE_REGEX = r"HTTP response status code: (.*)"
-    PROVISIONING_STATUS_REGEX = r'"Status": "(.*)"'
     SUCCESS = 0
 
     # ----------------------------------------------------------------------
@@ -52,18 +50,6 @@ class WizardExecutionPage(wx.Panel):
         current_value = self.gauge.GetValue()
         self.gauge.SetValue(current_value + delta)
 
-    def _parse_summary(self, data):
-        summaries = re.findall(self.PROVISIONING_SUMMARY_REGEX, data)
-        return [raw_summary.replace("\\n", "\n").replace("\\t", "\t")
-                for raw_summary in summaries]
-
-    def _parse_status_code(self, data):
-        match = re.search(self.PROVISIONING_STATUS_CODE_REGEX, data)
-        return None if match is None else match.group(1).strip()
-
-    def _parse_status(self, data):
-        return re.findall(self.PROVISIONING_STATUS_REGEX, data)
-
     def _console_output(self, data):
         self.log_text_area.AppendText("%s\n" % data)
 
@@ -80,7 +66,7 @@ class WizardExecutionPage(wx.Panel):
             ret_val, output, error, exec_time = \
                 execution_mgr.run_next_template()
             if ret_val == self.SUCCESS:
-                status_code = self._parse_status_code(output)
+                status_code = Utils.parse_status_code(output)
                 if status_code != "202":
                     self._console_output(
                         "ERROR: Provisioning job was not created successfully."
@@ -88,8 +74,8 @@ class WizardExecutionPage(wx.Panel):
                     execution_mgr.clean()
                     sys.exit(1)
                 self._increment_gauge(gauge_delta)
-                self._console_output("\n".join(self._parse_summary(output)))
-                statuses = self._parse_status(output)
+                self._console_output("\n".join(Utils.parse_summary(output)))
+                statuses = Utils.parse_status(output)
                 not_completed_statuses = filter(
                     lambda x: x.strip() != "Completed", statuses)
                 if len(not_completed_statuses) != 0:
@@ -103,7 +89,6 @@ class WizardExecutionPage(wx.Panel):
                         " Total executing time %.4f\n" % exec_time)
             else:
                 self._console_output("ERROR: Couldn't connect to NEO\n")
-                # l TODO - print an informative error Message
                 execution_mgr.clean()
                 sys.exit(1)
         end_run = clock()

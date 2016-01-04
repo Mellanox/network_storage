@@ -55,7 +55,7 @@ class Tracker(object):
                 self.parser.safeGetBool(
                     Const.PAGE_TYPE_MAIN, Const.ARG_MAIN_AUTO_DISCOVERY),
             Const.ARG_MAIN_SWITCH_IPS:
-                self.parser.safeGetListArg(
+                self.parser.safeGet(
                     Const.PAGE_TYPE_MAIN, Const.ARG_MAIN_SWITCH_IPS)
         }
 

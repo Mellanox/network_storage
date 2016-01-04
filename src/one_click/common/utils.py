@@ -14,13 +14,16 @@
 @date:   Dec 30, 2015
 """
 
+import re
+
 
 class Utils(object):
     """
     """
 
-    def __init__(self):
-        pass
+    PROVISIONING_SUMMARY_REGEX = r'"Summary": "(.*)"'
+    PROVISIONING_STATUS_CODE_REGEX = r"HTTP response status code: (.*)"
+    PROVISIONING_STATUS_REGEX = r'"Status": "(.*)"'
 
     @staticmethod
     def eraseDictValues(dictionary):
@@ -29,3 +32,18 @@ class Utils(object):
                 Utils.eraseDictValues(value)
             else:
                 dictionary[key] = None
+
+    @classmethod
+    def parse_summary(cls, data):
+        summaries = re.findall(cls.PROVISIONING_SUMMARY_REGEX, data)
+        return [raw_summary.replace("\\n", "\n").replace("\\t", "\t")
+                for raw_summary in summaries]
+
+    @classmethod
+    def parse_status_code(cls, data):
+        match = re.search(cls.PROVISIONING_STATUS_CODE_REGEX, data)
+        return None if match is None else match.group(1).strip()
+
+    @classmethod
+    def parse_status(cls, data):
+        return re.findall(cls.PROVISIONING_STATUS_REGEX, data)

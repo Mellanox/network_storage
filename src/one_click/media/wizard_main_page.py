@@ -54,7 +54,7 @@ class WizardMainPage(wx.Panel):
         switch_ips_label = wx.StaticText(self, -1, Const.ARG_MAIN_SWITCH_IPS)
         switch_ips_sizer.Add(switch_ips_label, 0, wx.ALIGN_LEFT | wx.ALL, 5)
         switch_ips_text_area = wx.TextCtrl(
-            self, -1, ", ".join(data[Const.ARG_MAIN_SWITCH_IPS]),
+            self, -1, data[Const.ARG_MAIN_SWITCH_IPS],
             style=wx.TE_MULTILINE)
         self.data_pointers[Const.ARG_MAIN_SWITCH_IPS] = switch_ips_text_area
         switch_ips_sizer.Add(
