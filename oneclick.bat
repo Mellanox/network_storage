@@ -1,6 +1,6 @@
 @ECHO OFF
 set PATH=c:\python27;c:\python27\Scripts;%PATH%
-set PYTHONPATH=Y:\OneClick Wizard\src\;
+set PYTHONPATH=%CD%\src\;
 python -V 2> dev.null
 findstr /c:"Python 2.7.10" dev.null
 IF ERRORLEVEL 1 (
