@@ -116,7 +116,7 @@ class ActionMngr(object):
         return len(self.template_list)
 
     def get_latest_template_name(self):
-        return self.template_list[self.current_template_index]
+        return self.template_list[self.current_template_index + 1]
 
     def clean(self):
         for file_name in os.listdir(self.DATA_FOLDER_PATH):
