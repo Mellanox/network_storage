@@ -79,8 +79,8 @@ class MainFrame(wx.Frame):
     def import_configuration_file(self, evt):
 
         openFileDialog = wx.FileDialog(
-            self, "Import configuration file", "", "",
-            "configuration files (*.cfg)|*.cfg",
+            self, "Import configuration file", r"%s/conf" % getcwd(),
+            "", "configuration files (*.cfg)|*.cfg",
             wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
