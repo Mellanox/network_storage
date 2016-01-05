@@ -26,6 +26,7 @@ class WizardPage(wx.Panel):
     def __init__(self, parent, title=None, page_data=None):
         """Constructor"""
         wx.Panel.__init__(self, parent)
+        self.title = title
         self.page_pointers = deepcopy(page_data)
         self.page_pointers.eraseValues()
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -117,6 +118,9 @@ class WizardPage(wx.Panel):
             self.page_data.global_args, self.page_pointers.global_args)
         self.save_args_from_ui(
             self.page_data.local_args, self.page_pointers.local_args)
+
+    def get_title(self):
+        return self.title
 
     def get_data(self):
         return self.page_data

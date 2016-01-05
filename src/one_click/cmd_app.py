@@ -61,7 +61,13 @@ def execute(execution_mgr):
                     " Status code returned - %s\n" % status_code
                 execution_mgr.clean()
                 sys.exit(1)
-            print "\n".join(Utils.parse_summary(output))
+            headlines = [("->Summary output for %s:\n" % ip)
+                         for ip in execution_mgr.get_switch_ips()]
+            summaries = [summary for summary in Utils.parse_summary(output)
+                         if summary != ""]
+            print "\n".join(
+                ["\n".join([headline, summary])
+                 for headline, summary in zip(headlines, summaries)])
             statuses = Utils.parse_status(output)
             not_completed_statuses = filter(
                 lambda x: x.strip() != "Completed", statuses)

@@ -27,6 +27,7 @@ class WizardMainPage(wx.Panel):
     # ----------------------------------------------------------------------
     def __init__(self, parent, title, data):
         wx.Panel.__init__(self, parent)
+        self.title = title
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
         self.main_data = data
@@ -97,6 +98,9 @@ class WizardMainPage(wx.Panel):
 
     def save(self):
         self.save_args_from_ui(self.main_data, self.data_pointers)
+
+    def get_title(self):
+        return self.title
 
     def get_data(self):
         return self.main_data

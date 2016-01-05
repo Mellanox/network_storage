@@ -74,7 +74,13 @@ class WizardExecutionPage(wx.Panel):
                     execution_mgr.clean()
                     sys.exit(1)
                 self._increment_gauge(gauge_delta)
-                self._console_output("\n".join(Utils.parse_summary(output)))
+                headlines = [("->Summary output for %s:\n" % ip)
+                             for ip in execution_mgr.get_switch_ips()]
+                summaries = [summary for summary in Utils.parse_summary(output)
+                             if summary != ""]
+                self._console_output("\n".join(
+                    ["\n".join([headline, summary])
+                     for headline, summary in zip(headlines, summaries)]))
                 statuses = Utils.parse_status(output)
                 not_completed_statuses = filter(
                     lambda x: x.strip() != "Completed", statuses)
@@ -88,6 +94,7 @@ class WizardExecutionPage(wx.Panel):
                         "-> Completed successfully."
                         " Total executing time %.4f\n" % exec_time)
             else:
+                print output
                 self._console_output("ERROR: Couldn't connect to NEO\n")
                 execution_mgr.clean()
                 sys.exit(1)

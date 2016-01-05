@@ -59,7 +59,7 @@ class ActionMngr(object):
                     "devices": template_data.local_args
                 }
             },
-            "object_ids": switch_ips.split(','),
+            "object_ids": [ip.strip() for ip in switch_ips.split(',')],
             "object_type": "System"
         }
         file_path = r"%s\%s" % (self.data_path, str(uuid.uuid4()))
@@ -113,6 +113,10 @@ class ActionMngr(object):
 
     def get_num_of_templates(self):
         return len(self.template_list)
+
+    def get_switch_ips(self):
+        return [ip.strip()
+                for ip in self.main_data[Const.ARG_MAIN_SWITCH_IPS].split(',')]
 
     def get_latest_template_name(self):
         return self.template_list[self.current_template_index + 1]

@@ -30,7 +30,7 @@ class ActionUtiles(object):
 
     @staticmethod
     def exec_timeout(command_list, input_file=subprocess.PIPE, input_str="",
-                     timeout=30):
+                     timeout=120):
         """
         Execute the given command list, feeding the given input to the program.
         Return a tuple containing the return code, stdout and stderr.
