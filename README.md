@@ -14,6 +14,8 @@ Wizard GUI:
 * If you are required to install python, click on the “python-2.7.10.amd64” file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
 
 Wizard Command-Line:
-Follow the same installation steps that were described in the 'Wizard GUI' section. Instead of clicking on the "oneclick.bat" file, click on "oneclick_cmd.bat".
+* Download the project as zip.
+* Click on the "oneclick_cmd.bat" file.
+* If you are required to install python, click on the “python-2.7.10.amd64” file and follow the installation steps. After the installation is over, open “oneclick_cmd.bat” again.
 
   
