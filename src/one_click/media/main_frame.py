@@ -20,6 +20,8 @@ from wizard_panel import WizardPanel
 from one_click.tracker.tracker import Tracker
 from one_click.common.constants import Constants as Const
 from ConfigParser import ConfigParser
+from os import getcwd
+
 
 CONF_FILE_PATH = r"conf/configuration_file.cfg"
 
@@ -33,28 +35,13 @@ class MainFrame(wx.Frame):
         wx.Frame.__init__(
             self, None, title=Const.WIZARD_TITLE, size=(800, 600))
         self.SetBackgroundColour((240, 240, 250))
-        self.init_frame(CONF_FILE_PATH)
-
-    def init_frame(self, conf_file_path):
-        self.tr = Tracker(conf_file_path)
-        self.panel = WizardPanel(self)
-        self.panel.addPage(
-            Const.PAGE_TITLE_MAIN, self.tr.main_data, Const.PAGE_TYPE_MAIN)
-
-        page_titles = self.tr.page_titles
-        for index in xrange(len(page_titles)):
-            page_title = page_titles[index]
-            self.panel.addPage(
-                page_title, self.tr.page_data[page_title],
-                Const.PAGE_TYPE_TEMPLATE)
-        self.panel.addPage(Const.PAGE_TITLE_EXEC, None, Const.PAGE_TYPE_EXEC)
 
         menu_bar = wx.MenuBar()
         file_menu = wx.Menu()
         import_conf = file_menu.Append(wx.NewId(), "Import",
                                        "Import configuration from a file")
         self.Bind(wx.EVT_MENU, self.import_configuration_file, import_conf)
-        import_conf.Enable(False)
+#         import_conf.Enable(Falsel)
         export = file_menu.Append(wx.NewId(), "Export",
                                   "Export configurations to a file")
         self.Bind(wx.EVT_MENU, self.export_configuration_file, export)
@@ -65,6 +52,25 @@ class MainFrame(wx.Frame):
         menu_bar.Append(file_menu, "&File")
         self.SetMenuBar(menu_bar)
 
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.SetSizer(self.sizer)
+        self.init_frame(CONF_FILE_PATH)
+
+    def init_frame(self, conf_file_path):
+        self.tr = Tracker(conf_file_path)
+        self.panel = WizardPanel(self)
+        self.sizer.Add(self.panel, 1, wx.EXPAND, 0)
+        self.panel.addPage(
+            Const.PAGE_TITLE_MAIN, self.tr.main_data, Const.PAGE_TYPE_MAIN)
+
+        page_titles = self.tr.page_titles
+        for index in xrange(len(page_titles)):
+            page_title = page_titles[index]
+            self.panel.addPage(
+                page_title, self.tr.page_data[page_title],
+                Const.PAGE_TYPE_TEMPLATE)
+        self.panel.addPage(Const.PAGE_TITLE_EXEC, None, Const.PAGE_TYPE_EXEC)
+        self.Layout()
         self.Show()
 
     def exit_wizard(self, evt):
@@ -80,6 +86,8 @@ class MainFrame(wx.Frame):
         if openFileDialog.ShowModal() == wx.ID_CANCEL:
             return
 
+        self.sizer.Remove(0)
+        self.panel.Destroy()
         self.init_frame(openFileDialog.GetPath())
 
     def export_configuration_file(self, evt):
@@ -92,7 +100,7 @@ class MainFrame(wx.Frame):
         current_conf = self.generate_conf(self.panel.pages)
 
         saveFileDialog = wx.FileDialog(self, "Export configuration file",
-                                       "", "",
+                                       r"%s/conf" % getcwd(), "",
                                        "configuration files (*.cfg)|*.cfg",
                                        wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
 

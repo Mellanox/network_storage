@@ -56,12 +56,13 @@ class WizardMainPage(wx.Panel):
         switch_ips_sizer.Add(switch_ips_label, 0, wx.ALIGN_LEFT | wx.ALL, 5)
         switch_ips_text_area = wx.TextCtrl(
             self, -1, data[Const.ARG_MAIN_SWITCH_IPS],
-            style=wx.TE_MULTILINE)
+            style=wx.TE_MULTILINE | wx.TE_READONLY)
         self.data_pointers[Const.ARG_MAIN_SWITCH_IPS] = switch_ips_text_area
         switch_ips_sizer.Add(
             switch_ips_text_area, 0, wx.ALIGN_LEFT | wx.EXPAND | wx.ALL, 5)
         discover_btn = wx.Button(self, label=Const.BTN_LABEL_DISCOVER)
         discover_btn.Bind(wx.EVT_BUTTON, self.onDiscover)
+        discover_btn.Disable()
         switch_ips_sizer.Add(discover_btn, 0, wx.ALL | wx.ALIGN_LEFT, 5)
         sizer.Add(switch_ips_sizer, 0, wx.EXPAND | wx.ALL, 5)
 

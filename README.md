@@ -6,10 +6,14 @@ For each template, the user will be able to change the arguments on run-time. Fi
 ### Version
 1.0
 
-### Installation
+### Installation (Windows only)
 
-Windows:
+Wizard GUI:
 * Download the project as zip.
 * Click on the "oneclick.bat" file.
 * If you are required to install python, click on the “python-2.7.10.amd64” file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
 
+Wizard Command-Line:
+Follow the same installation steps that were described in the 'Wizard GUI' section. Instead of clicking on the "oneclick.bat" file, click on "oneclick_cmd.bat".
+
+  
