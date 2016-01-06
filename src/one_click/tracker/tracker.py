@@ -18,6 +18,7 @@ from oneclick_config_parser import OneClickConfigParser
 from one_click.tracker.section_data import SectionData
 from one_click.common.constants import Constants as Const
 import re
+import sys
 
 
 class Tracker(object):
@@ -26,14 +27,19 @@ class Tracker(object):
     GLOBAL_ARG_REGEX = r"<([^<>]+)>"
 
     def __init__(self, conf_file_path):
-        self.parser = OneClickConfigParser()
-        self.parser.readFullPathFiles(conf_file_path)
-        self.main_data = self.parseMain()
-        self.page_titles = self.parsePagesTitles()
+        try:
+            self.parser = OneClickConfigParser()
+            self.parser.readFullPathFiles(conf_file_path)
+            self.main_data = self.parseMain()
+            self.page_titles = self.parsePagesTitles()
 
-        self.page_data = {}
-        for page_title in self.page_titles:
-            self.page_data[page_title] = self.parsePage(page_title)
+            self.page_data = {}
+            for page_title in self.page_titles:
+                self.page_data[page_title] = self.parsePage(page_title)
+        except Exception:
+            print "Error: Could not parse the configuration file." \
+                " Please make sure it is in the right format."
+            sys.exit(1)
 
 #         self.debugMainAttr()
 #         self.debugPagesOrder()
