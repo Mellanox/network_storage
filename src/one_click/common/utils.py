@@ -47,3 +47,7 @@ class Utils(object):
     @classmethod
     def parse_status(cls, data):
         return re.findall(cls.PROVISIONING_STATUS_REGEX, data)
+
+    @staticmethod
+    def camelcase_text(text):
+        return text.replace('_', ' ').title()

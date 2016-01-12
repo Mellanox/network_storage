@@ -25,7 +25,7 @@ class WizardMainPage(wx.Panel):
     """"""
 
     # ----------------------------------------------------------------------
-    def __init__(self, parent, title, data):
+    def __init__(self, parent, title, data, page_titles):
         wx.Panel.__init__(self, parent)
         self.title = title
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -51,23 +51,93 @@ class WizardMainPage(wx.Panel):
             data[Const.ARG_MAIN_PASSWORD])
         sizer.Add(login_sizer, 0, wx.EXPAND | wx.ALL, 5)
 
+        # =========================================================
+
         switch_ips_sizer = wx.BoxSizer(wx.VERTICAL)
-        switch_ips_label = wx.StaticText(self, -1, Const.ARG_MAIN_SWITCH_IPS)
+        switch_ips_label = wx.StaticText(
+            self, -1, Const.LABEL_SELECTED_SWITCHES)
         switch_ips_sizer.Add(switch_ips_label, 0, wx.ALIGN_LEFT | wx.ALL, 5)
-        switch_ips_text_area = wx.TextCtrl(
-            self, -1, data[Const.ARG_MAIN_SWITCH_IPS],
+        choose_ips_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        switch_ips_sizer.Add(choose_ips_sizer, 0, wx.ALIGN_LEFT | wx.ALL, 5)
+
+        self.left_list_box = wx.ListBox(
+            self, -1, choices=[],
             style=wx.TE_MULTILINE | wx.TE_READONLY)
-        self.data_pointers[Const.ARG_MAIN_SWITCH_IPS] = switch_ips_text_area
-        switch_ips_sizer.Add(
-            switch_ips_text_area, 0, wx.ALIGN_LEFT | wx.EXPAND | wx.ALL, 5)
-        discover_btn = wx.Button(self, label=Const.BTN_LABEL_DISCOVER)
-        discover_btn.Bind(wx.EVT_BUTTON, self.onDiscover)
-        discover_btn.Disable()
-        switch_ips_sizer.Add(discover_btn, 0, wx.ALL | wx.ALIGN_LEFT, 5)
+        choose_ips_sizer.Add(self.left_list_box, 2, wx.EXPAND | wx.ALL, 5)
+        add_remove_sizer = wx.BoxSizer(wx.VERTICAL)
+        choose_ips_sizer.Add(add_remove_sizer, 1, wx.EXPAND | wx.ALL, 5)
+        switch_ips = [switch_ip.strip() for switch_ip in
+                      data[Const.ARG_MAIN_SWITCH_IPS].split(",")]
+        self.right_list_box = wx.ListBox(
+            self, -1, choices=switch_ips,
+            style=wx.TE_MULTILINE | wx.TE_READONLY)
+        choose_ips_sizer.Add(self.right_list_box, 2, wx.EXPAND | wx.ALL, 5)
+
+        add_switch_btn = wx.Button(self, label=Const.BTN_LABEL_ADD_SWITCH)
+        add_switch_btn.Bind(wx.EVT_BUTTON, self.onAdd)
+        add_remove_sizer.Add(add_switch_btn, 0, wx.ALL, 5)
+        remove_switch_btn = wx.Button(
+            self, label=Const.BTN_LABEL_REMOVE_SWITCH)
+        remove_switch_btn.Bind(wx.EVT_BUTTON, self.onRemove)
+        add_remove_sizer.Add(remove_switch_btn, 0, wx.ALL, 5)
+
         sizer.Add(switch_ips_sizer, 0, wx.EXPAND | wx.ALL, 5)
 
+        self.left_list_box.Enable(False)
+        add_switch_btn.Enable(False)
+        remove_switch_btn.Enable(False)
+
+        # =========================================================
+
+        template_list_sizer = wx.BoxSizer(wx.VERTICAL)
+        template_list_label = wx.StaticText(
+            self, -1, Const.LABEL_TEMPLATE_LIST)
+        template_list_sizer.Add(
+            template_list_label, 0, wx.ALIGN_LEFT | wx.ALL, 5)
+        template_list_textctrl = wx.TextCtrl(
+            self, -1, "",
+            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER)
+        template_list_textctrl.SetBackgroundColour(Const.BACKGROUND_COLOUR)
+        template_list_sizer.Add(template_list_textctrl, 0,
+                                wx.ALIGN_LEFT | wx.ALL, 5)
+        template_list = ["%d. %s\n" % (template_num, template_name)
+                         for template_num, template_name in
+                         enumerate(page_titles, 1)]
+        for template in template_list:
+            template_list_textctrl.AppendText(template)
+
+        sizer.Add(template_list_sizer, 0, wx.EXPAND | wx.ALL, 5)
+#         switch_ips_sizer = wx.BoxSizer(wx.VERTICAL)
+#         switch_ips_label = wx.StaticText(self, -1, Const.ARG_MAIN_SWITCH_IPS)
+#         switch_ips_sizer.Add(switch_ips_label, 0, wx.ALIGN_LEFT | wx.ALL, 5)
+#         switch_ips_text_area = wx.TextCtrl(
+#             self, -1, data[Const.ARG_MAIN_SWITCH_IPS],
+#             style=wx.TE_MULTILINE | wx.TE_READONLY)
+#         self.data_pointers[Const.ARG_MAIN_SWITCH_IPS] = switch_ips_text_area
+#         switch_ips_sizer.Add(
+#             switch_ips_text_area, 0, wx.ALIGN_LEFT | wx.EXPAND | wx.ALL, 5)
+#         discover_btn = wx.Button(self, label=Const.BTN_LABEL_DISCOVER)
+#         discover_btn.Bind(wx.EVT_BUTTON, self.onDiscover)
+#         discover_btn.Disable()
+#         switch_ips_sizer.Add(discover_btn, 0, wx.ALL | wx.ALIGN_LEFT, 5)
+#         sizer.Add(switch_ips_sizer, 0, wx.EXPAND | wx.ALL, 5)
+
+    def onAdd(self, evt):
+        item_to_add = self.left_list_box.GetSelection()
+        if item_to_add != wx.NOT_FOUND:
+            item_string = self.left_list_box.GetString(item_to_add)
+            self.left_list_box.Delete(item_to_add)  # delete the item
+            self.right_list_box.Append(item_string)
+
+    def onRemove(self, evt):
+        item_to_add = self.right_list_box.GetSelection()
+        if item_to_add != wx.NOT_FOUND:
+            item_string = self.right_list_box.GetString(item_to_add)
+            self.right_list_box.Delete(item_to_add)  # delete the item
+            self.left_list_box.Append(item_string)
+
     def generate_arg(self, sizer, label, default_value):
-        arg_label = wx.StaticText(self, -1, label)
+        arg_label = wx.StaticText(self, -1, Utils.camelcase_text(label))
         arg_text = wx.TextCtrl(self, -1, default_value)
         self.data_pointers[label] = arg_text
         arg_sizer = wx.BoxSizer(wx.HORIZONTAL)

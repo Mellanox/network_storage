@@ -36,6 +36,8 @@ class Constants(object):
     BTN_LABEL_PREV = "Previous"
     BTN_LABEL_RUN = "Run"
     BTN_LABEL_DISCOVER = "Discover"
+    BTN_LABEL_ADD_SWITCH = "Add"
+    BTN_LABEL_REMOVE_SWITCH = "Remove"
 
     PAGE_TYPE_MAIN = "main"
     PAGE_TYPE_TEMPLATE = "template"
@@ -47,4 +49,11 @@ class Constants(object):
     WIZARD_TITLE = "Generic Wizard"
 
     BOX_TITLE_GLOBAL = "Global Arguments"
-    BOX_TITLE_LOCAL = "Local Arguments"
+    BOX_TITLE_LOCAL = "Specific Arguments"
+
+    LABEL_TEMPLATE_LIST = "Templates"
+    LABEL_SELECTED_SWITCHES = "Selected Switches"
+
+    BACKGROUND_COLOUR = (240, 240, 250)
+    TEXT_COLOUR_ERROR = (255, 0, 0)
+    TEXT_COLOUR_SUCCESS = (0, 255, 0)

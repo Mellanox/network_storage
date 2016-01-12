@@ -59,6 +59,10 @@ class SectionData(object):
         Utils.eraseDictValues(self.global_args)
         Utils.eraseDictValues(self.local_args)
 
+    def has_args(self):
+        return len(self.global_args) != 0 or \
+            sum([len(val) for val in self.local_args.values()]) != 0
+
     def __str__(self):
         result = {
             Const.ARG_TYPE_GLOBAL: self.global_args,

@@ -39,7 +39,7 @@ def parse_args(args):
 def prepare_to_execute(tracker, execution_mgr):
     execution_mgr.update_data(tracker.main_data, True)
     for template_index, template_name in enumerate(tracker.page_titles):
-        execution_mgr.add_template(template_name)
+        execution_mgr.add_template(template_name, True)
         execution_mgr.update_data(tracker.page_data[template_name],
                                   False,
                                   template_index)
@@ -47,11 +47,11 @@ def prepare_to_execute(tracker, execution_mgr):
 
 def execute(execution_mgr):
     execution_mgr.analyze_data()
-    all_provisioning_passed = True
+    all_provisioning_results = []
     start_run = clock()
     while execution_mgr.has_next():
-        print "---> Running template '%s'" % \
-            execution_mgr.get_latest_template_name()
+        template_name = execution_mgr.get_latest_template_name()
+        print "---> Running template '%s'" % template_name
         ret_val, output, error, exec_time = \
             execution_mgr.run_next_template()
         if ret_val == SUCCESS:
@@ -72,10 +72,11 @@ def execute(execution_mgr):
             not_completed_statuses = filter(
                 lambda x: x.strip() != "Completed", statuses)
             if len(not_completed_statuses) != 0:
-                all_provisioning_passed = False
+                all_provisioning_results.append((template_name, False))
                 print "ERROR: provisioning job %s\n" % \
                     not_completed_statuses[0].lower()
             else:
+                all_provisioning_results.append((template_name, True))
                 print "-> Completed successfully." \
                     " Total executing time %.4f\n" % exec_time
         else:
@@ -83,8 +84,18 @@ def execute(execution_mgr):
             execution_mgr.clean()
             sys.exit(1)
     end_run = clock()
-    print ">>> Configuration completed %s errors. Total time: %.4f" % \
-        ("without" if all_provisioning_passed else "with",
+
+    print "*** Status Summary ***\n"
+    print "%-15s %s" % ("Template", "Status")
+    print "%-15s %-10s" % ("-" * 15, "-" * 10)
+    for template, finished_successfully in all_provisioning_results:
+        result = "Completed" if finished_successfully else "Failed"
+        print "%-15s %s" % (template, result)
+
+    finished_without_error = all(
+        [result for _, finished_successfully in all_provisioning_results])
+    print "\n>>> Configuration completed %s errors. Total time: %.4f" % \
+        ("without" if finished_without_error else "with",
          (end_run - start_run))
 
     execution_mgr.clean()

@@ -17,13 +17,14 @@
 import wx
 from copy import deepcopy
 from one_click.common.constants import Constants as Const
+from one_click.common.utils import Utils
 
 
 class WizardPage(wx.Panel):
     """"""
 
     # ----------------------------------------------------------------------
-    def __init__(self, parent, title=None, page_data=None):
+    def __init__(self, parent, title=None, page_data=None, page_titles=None):
         """Constructor"""
         wx.Panel.__init__(self, parent)
         self.title = title
@@ -90,7 +91,8 @@ class WizardPage(wx.Panel):
 
     def generate_arg(self, parent_panel, sizer, label, is_global,
                      switch_ip=None):
-        arg_label = wx.StaticText(parent_panel, -1, label)
+        arg_label = wx.StaticText(parent_panel, -1,
+                                  Utils.camelcase_text(label))
         default_value = self.page_data.get_global_arg(
             label) if is_global else self.page_data.get_local_arg(label,
                                                                   switch_ip)

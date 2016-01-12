@@ -55,8 +55,11 @@ class WizardPanel(wx.Panel):
         self.mainSizer.Add(btnSizer, 0, wx.ALIGN_RIGHT)
         self.SetSizer(self.mainSizer)
 
+        self.templates_executes = False
+
     # ----------------------------------------------------------------------
-    def addPage(self, title=None, page_data=None, page_type=False):
+    def addPage(self, title=None, page_data=None, page_type=False,
+                page_titles=None):
         """"""
 
         page_type_to_obj = {
@@ -65,17 +68,20 @@ class WizardPanel(wx.Panel):
             Const.PAGE_TYPE_EXEC: WizardExecutionPage
         }
 
-        panel = page_type_to_obj[page_type](self, title, page_data)
-        self.panelSizer.Add(panel, 2, wx.EXPAND)
-        self.pages.append(panel)
-        if len(self.pages) > 1:
-            # hide all panels after the first one
-            panel.Hide()
-            self.Layout()
-
         # If the page we add is a template page, update the execution manager
         if page_type == Const.PAGE_TYPE_TEMPLATE:
-            self.execution_mgr.add_template(title)
+            self.execution_mgr.add_template(title, page_data.has_args())
+        if page_type != Const.PAGE_TYPE_TEMPLATE or page_data.has_args():
+            panel = page_type_to_obj[page_type](
+                self, title, page_data, page_titles)
+            self.panelSizer.Add(panel, 2, wx.EXPAND)
+            self.pages.append(panel)
+            if len(self.pages) > 1:
+                # hide all panels after the first one
+                panel.Hide()
+                self.Layout()
+        else:
+            self.execution_mgr.update_data_by_name(page_data, title)
 
     # ----------------------------------------------------------------------
     def onNext(self, event):
@@ -97,7 +103,6 @@ class WizardPanel(wx.Panel):
         # button and run the execution
         if self.page_num == pageCount - 2:
             self.nextBtn.Hide()
-            # TODO Run the templates!
 
         # Save that data and move to the next page, if not in the execution
         # stage
@@ -115,8 +120,10 @@ class WizardPanel(wx.Panel):
             self.nextBtn.Hide()
             self.panelSizer.Layout()
             self.Layout()
-            run_thread = Thread(target=self.run_helper)
-            run_thread.start()
+            if not self.templates_executes:
+                self.templates_executes = True
+                run_thread = Thread(target=self.run_helper)
+                run_thread.start()
 
         self.Layout()
 

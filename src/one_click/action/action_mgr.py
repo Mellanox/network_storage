@@ -32,24 +32,32 @@ class ActionMngr(object):
         """
 
         self.template_list = []
-
         self.templates_data = {}
-
+        self.map_page_index_to_real_index = {}
         self.main_data = None
-
         self.current_template_index = -1
-
         self.data_path = data_path
+        self.num_of_templates_without_args = 0
 
-    def add_template(self, template_name):
+    def add_template(self, template_name, has_arguments):
         self.template_list.append(template_name)
+        if not has_arguments:
+            self.num_of_templates_without_args += 1
+        else:
+            real_index = len(self.template_list) - 1
+            page_index = real_index - self.num_of_templates_without_args
+            self.map_page_index_to_real_index[page_index] = real_index
 
-    def update_data(self, data, is_main, template_index=-1):
+    def update_data(self, data, is_main, page_index=-1):
         if is_main:
             self.main_data = data
         else:
+            template_index = self.map_page_index_to_real_index[page_index]
             template_name = self.template_list[template_index]
             self.templates_data[template_name] = data
+
+    def update_data_by_name(self, data, template_name):
+        self.templates_data[template_name] = data
 
     def _create_payload_file(self, template_data, switch_ips):
         payload = {

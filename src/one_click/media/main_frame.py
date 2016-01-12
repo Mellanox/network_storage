@@ -34,7 +34,7 @@ class MainFrame(wx.Frame):
         """Constructor"""
         wx.Frame.__init__(
             self, None, title=Const.WIZARD_TITLE, size=(800, 600))
-        self.SetBackgroundColour((240, 240, 250))
+        self.SetBackgroundColour(Const.BACKGROUND_COLOUR)
 
         menu_bar = wx.MenuBar()
         file_menu = wx.Menu()
@@ -60,16 +60,18 @@ class MainFrame(wx.Frame):
         self.tr = Tracker(conf_file_path)
         self.panel = WizardPanel(self)
         self.sizer.Add(self.panel, 1, wx.EXPAND, 0)
-        self.panel.addPage(
-            Const.PAGE_TITLE_MAIN, self.tr.main_data, Const.PAGE_TYPE_MAIN)
-
         page_titles = self.tr.page_titles
+        self.panel.addPage(
+            Const.PAGE_TITLE_MAIN, self.tr.main_data, Const.PAGE_TYPE_MAIN,
+            page_titles)
+
         for index in xrange(len(page_titles)):
             page_title = page_titles[index]
             self.panel.addPage(
                 page_title, self.tr.page_data[page_title],
-                Const.PAGE_TYPE_TEMPLATE)
-        self.panel.addPage(Const.PAGE_TITLE_EXEC, None, Const.PAGE_TYPE_EXEC)
+                Const.PAGE_TYPE_TEMPLATE, page_titles)
+        self.panel.addPage(
+            Const.PAGE_TITLE_EXEC, None, Const.PAGE_TYPE_EXEC, page_titles)
         self.Layout()
         self.Show()
 
