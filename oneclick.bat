@@ -8,5 +8,5 @@ IF ERRORLEVEL 1 (
 	echo "Please install the supplied Python installation"
 	pause
 ) ELSE (
-	start cmd.exe /k "pip.exe install --upgrade  --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix && python ./src/one_click/app.py"
+	start cmd.exe /k "pip.exe install --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix && python ./src/one_click/app.py"
 )

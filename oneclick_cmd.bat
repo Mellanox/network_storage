@@ -9,5 +9,5 @@ IF ERRORLEVEL 1 (
 	pause
 ) ELSE (
 	set /p file_path="Enter the path of your configuration file: "
-	start cmd.exe /k "pip.exe install --upgrade  --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix && python ./src/one_click/cmd_app.py %%file_path%%"
+	start cmd.exe /k "pip.exe install --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix && python ./src/one_click/cmd_app.py %%file_path%%"
 )
