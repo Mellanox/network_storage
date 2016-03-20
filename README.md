@@ -12,10 +12,10 @@ Wizard GUI:
 * Download the project as zip.
 * Click on the "oneclick.bat" file.
 * If you are required to install python, click on the “python-2.7.10.amd64” file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
+* If you are required to install wxPython, click on the "wxPython3.0-win64-3.0.2.0-py27" file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
 
 Wizard Command-Line:
 * Download the project as zip.
 * Click on the "oneclick_cmd.bat" file.
 * If you are required to install python, click on the “python-2.7.10.amd64” file and follow the installation steps. After the installation is over, open “oneclick_cmd.bat” again.
-
-  
+* If you are required to install wxPython, click on the "wxPython3.0-win64-3.0.2.0-py27" file and follow the installation steps. After the installation is over, open “oneclick.bat” again.
